@@ -1,8 +1,11 @@
 package com.unknown.commerce.domain.item.application;
 
 import com.unknown.commerce.domain.item.dao.ItemRepository;
+import com.unknown.commerce.domain.item.dto.ItemDetailResponse;
 import com.unknown.commerce.domain.item.dto.ItemResponse;
 import com.unknown.commerce.domain.item.entity.Item;
+import com.unknown.commerce.global.exception.BusinessException;
+import com.unknown.commerce.global.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,5 +23,13 @@ public class ItemServiceImpl implements ItemService{
         Page<Item> items = itemRepository.findAllItems(pageable);
 
         return items.map(ItemResponse::of);
+    }
+
+    @Override
+    public ItemDetailResponse getItem(Long id) {
+        Item item = itemRepository.findByItemId(id)
+                .orElseThrow(() -> new BusinessException(HttpResponse.Fail.NOT_FOUND_ITEM));
+
+        return ItemDetailResponse.of(item);
     }
 }
