@@ -20,6 +20,6 @@ public class Product extends BaseEntity {
     @Column(name = "price", columnDefinition = "DECIMAL(64, 3)")
     private BigDecimal price;
 
-    @Column(name = "quantity", columnDefinition = "BIGINT")
-    private Long quantity;
+    @Column(name = "stock", columnDefinition = "BIGINT")
+    private Long stock;
 }
