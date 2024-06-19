@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import java.util.List;
 public class OrderItem extends BaseEntity {
     @Column(name = "name", columnDefinition = "VARCHAR(200)")
     private String name;
+
+    @Column(name = "price", columnDefinition = "DECIMAL(64, 3)")
+    private BigDecimal price;
 
     @Column(name = "quantity", columnDefinition = "BIGINT")
     private Long quantity;
