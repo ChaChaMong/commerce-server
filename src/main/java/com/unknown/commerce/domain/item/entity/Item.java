@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,9 @@ import java.util.List;
 public class Item extends BaseEntity {
     @Column(name = "name", columnDefinition = "VARCHAR(200)")
     private String name;
+
+    @Column(name = "price", columnDefinition = "DECIMAL(64, 3)")
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "item")
     @Builder.Default
