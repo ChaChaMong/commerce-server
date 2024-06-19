@@ -16,9 +16,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_product")
 public class ItemProduct extends BaseEntity {
-    @Column(name = "name", columnDefinition = "VARCHAR(200)")
-    private String name;
-
     @Column(name = "quantity", columnDefinition = "BIGINT")
     private Long quantity;
 
