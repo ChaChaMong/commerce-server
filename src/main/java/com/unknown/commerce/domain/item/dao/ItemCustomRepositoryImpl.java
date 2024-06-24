@@ -44,10 +44,10 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
     }
 
     @Override
-    public Optional<Item> findByItemId(Long restaurantId) {
+    public Optional<Item> findByItemId(Long itemId) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        builder.and(item.id.eq(restaurantId))
+        builder.and(item.id.eq(itemId))
                 .and(item.deletedAt.isNull());
 
         return Optional.ofNullable(jpaQueryFactory

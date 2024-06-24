@@ -27,4 +27,8 @@ public class Product extends BaseEntity {
 
     @Column(name = "stock", columnDefinition = "BIGINT")
     private Long stock;
+
+    public void minusStock(Long quantity) {
+        this.stock -= quantity;
+    }
 }
