@@ -67,12 +67,12 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 // Step 4: 요청 받은 Product의 재고가 있는지 확인
-                if (product.getStock() < productRequest.getQuantity()) {
+                if (product.getStock() < productRequest.getQuantity() * itemRequest.getQuantity()) {
                     throw new BusinessException(HttpResponse.Fail.OUT_OF_STOCK_PRODUCT);
                 }
 
                 // Step 5: Product 재고 차감
-                product.minusStock(productRequest.getQuantity());
+                product.minusStock(productRequest.getQuantity() * itemRequest.getQuantity());
             }
         }
 
