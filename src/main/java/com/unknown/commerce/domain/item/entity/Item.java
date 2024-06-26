@@ -1,6 +1,8 @@
 package com.unknown.commerce.domain.item.entity;
 
 import com.unknown.commerce.global.entity.BaseEntity;
+import com.unknown.commerce.global.exception.BusinessException;
+import com.unknown.commerce.global.response.HttpResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -28,4 +30,22 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item")
     @Builder.Default
     private List<ItemProduct> itemProducts = new ArrayList<>();
+
+    public void verifyName(String name) {
+        if(!this.name.equals(name)) {
+            throw new BusinessException(HttpResponse.Fail.ITEM_MISMATCH);
+        }
+    }
+
+    public void verifyPrice(BigDecimal price) {
+        if(this.price.compareTo(price) != 0) {
+            throw new BusinessException(HttpResponse.Fail.ITEM_MISMATCH);
+        }
+    }
+
+    public void verifyItemProductSize(int size) {
+        if(this.itemProducts.size() != size) {
+            throw new BusinessException(HttpResponse.Fail.ITEM_MISMATCH);
+        }
+    }
 }
