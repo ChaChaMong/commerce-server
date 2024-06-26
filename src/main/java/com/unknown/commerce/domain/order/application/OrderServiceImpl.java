@@ -36,40 +36,30 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest) {
         for (ItemRequest itemRequest : orderRequest.getOrderItems()) {
-            // Step 1: 요청 받은 Item이 실제 DB에 존재하고 정보가 맞는지 확인
             Item item = itemRepository.findByItemId(itemRequest.getItemId())
                     .orElseThrow(() -> new BusinessException(HttpResponse.Fail.NOT_FOUND_ITEM));
 
-            if (!item.getName().equals(itemRequest.getName()) || item.getPrice().compareTo(itemRequest.getPrice()) != 0) {
-                throw new BusinessException(HttpResponse.Fail.ITEM_MISMATCH);
-            }
-
-            // Step 2: 요청 받은 Item의 Product 구조가 실제 DB 정보와 맞는지 확인
-            if (item.getItemProducts().size() != itemRequest.getProductRequests().size()) {
-                throw new BusinessException(HttpResponse.Fail.PRODUCT_MISMATCH);
-            }
+            // Step 1: 요청 받은 Item이 실제 DB에 존재하고 정보가 맞는지 확인
+            item.verifyName(itemRequest.getName());
+            item.verifyPrice(itemRequest.getPrice());
+            item.verifyItemProductSize(itemRequest.getProductRequests().size());
 
             for (ItemProduct itemProduct : item.getItemProducts()) {
                 for (ProductRequest productRequest : itemRequest.getProductRequests()) {
-                    if (itemProduct.getQuantity() != productRequest.getQuantity()) {
-                        throw new BusinessException(HttpResponse.Fail.PRODUCT_MISMATCH);
-                    }
+                    // Step 2: 요청 받은 Item의 Product 구조가 실제 DB 정보와 맞는지 확인
+                    itemProduct.verifyQuantity(productRequest.getQuantity());
                 }
             }
 
             for (ProductRequest productRequest : itemRequest.getProductRequests()) {
-                // Step 3: 요청 받은 Product가 실제 DB에 존재하고 정보가 맞는지 확인
                 Product product = productRepository.findByProductId(productRequest.getProductId())
                         .orElseThrow(() -> new BusinessException(HttpResponse.Fail.NOT_FOUND_PRODUCT));
 
-                if (!product.getName().equals(productRequest.getName()) || product.getPrice().compareTo(productRequest.getPrice()) != 0) {
-                    throw new BusinessException(HttpResponse.Fail.PRODUCT_MISMATCH);
-                }
+                // Step 3: 요청 받은 Product가 실제 DB에 존재하고 정보가 맞는지 확인
+                product.verifyName(productRequest.getName());
 
                 // Step 4: 요청 받은 Product의 재고가 있는지 확인
-                if (product.getStock() < productRequest.getQuantity() * itemRequest.getQuantity()) {
-                    throw new BusinessException(HttpResponse.Fail.OUT_OF_STOCK_PRODUCT);
-                }
+                product.verifyStock(productRequest.getQuantity() * itemRequest.getQuantity());
 
                 // Step 5: Product 재고 차감
                 product.minusStock(productRequest.getQuantity() * itemRequest.getQuantity());

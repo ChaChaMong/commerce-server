@@ -2,6 +2,8 @@ package com.unknown.commerce.domain.item.entity;
 
 import com.unknown.commerce.domain.product.entity.Product;
 import com.unknown.commerce.global.entity.BaseEntity;
+import com.unknown.commerce.global.exception.BusinessException;
+import com.unknown.commerce.global.response.HttpResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,4 +28,10 @@ public class ItemProduct extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", columnDefinition = "BIGINT", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Product product;
+
+    public void verifyQuantity(Long quantity) {
+        if(!this.quantity.equals(quantity)) {
+            throw new BusinessException(HttpResponse.Fail.PRODUCT_MISMATCH);
+        }
+    }
 }

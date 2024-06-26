@@ -1,6 +1,8 @@
 package com.unknown.commerce.domain.product.entity;
 
 import com.unknown.commerce.global.entity.BaseEntity;
+import com.unknown.commerce.global.exception.BusinessException;
+import com.unknown.commerce.global.response.HttpResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -27,6 +29,18 @@ public class Product extends BaseEntity {
 
     @Column(name = "stock", columnDefinition = "BIGINT")
     private Long stock;
+
+    public void verifyName(String name) {
+        if(!this.name.equals(name)) {
+            throw new BusinessException(HttpResponse.Fail.PRODUCT_MISMATCH);
+        }
+    }
+
+    public void verifyStock(Long count) {
+        if(this.stock < count) {
+            throw new BusinessException(HttpResponse.Fail.OUT_OF_STOCK_PRODUCT);
+        }
+    }
 
     public void minusStock(Long quantity) {
         this.stock -= quantity;
