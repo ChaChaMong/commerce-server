@@ -19,7 +19,13 @@ public class OrderRequest {
     private Long phone;
     private String ordererName;
 
-    public static Order toEntity(OrderRequest request, BigDecimal totalPrice) {
+    public static Order toEntity(OrderRequest request) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (ItemRequest itemRequest : request.getOrderItems()) {
+            BigDecimal itemTotalPrice = itemRequest.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+            totalPrice = totalPrice.add(itemTotalPrice);
+        }
+
         return Order.builder()
                 .price(totalPrice)
                 .status(request.getStatus())
