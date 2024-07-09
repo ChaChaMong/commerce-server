@@ -21,8 +21,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -64,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // Step 5: Order 생성 및 저장
-        Order order = OrderRequest.toEntity(orderRequest, calculateTotalPrice(orderRequest));
+        Order order = OrderRequest.toEntity(orderRequest);
         orderRepository.save(order);
 
         // Step 6: OrderItem 및 OrderProduct 생성 및 저장
@@ -79,14 +77,5 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return OrderResponse.of(order);
-    }
-
-    private BigDecimal calculateTotalPrice(OrderRequest orderRequest) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        for (ItemRequest itemRequest : orderRequest.getOrderItems()) {
-            BigDecimal itemTotalPrice = itemRequest.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
-            totalPrice = totalPrice.add(itemTotalPrice);
-        }
-        return totalPrice;
     }
 }
