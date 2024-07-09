@@ -36,13 +36,11 @@ public class Product extends BaseEntity {
         }
     }
 
-    public void verifyStock(Long count) {
-        if(this.stock < count) {
+    public void minusStock(Long quantity) {
+        if(this.stock < quantity) {
             throw new BusinessException(HttpResponse.Fail.OUT_OF_STOCK_PRODUCT);
         }
-    }
 
-    public void minusStock(Long quantity) {
         this.stock -= quantity;
     }
 }

@@ -58,19 +58,16 @@ public class OrderServiceImpl implements OrderService {
                 // Step 3: 요청 받은 Product가 실제 DB에 존재하고 정보가 맞는지 확인
                 product.verifyName(productRequest.getName());
 
-                // Step 4: 요청 받은 Product의 재고가 있는지 확인
-                product.verifyStock(productRequest.getQuantity() * itemRequest.getQuantity());
-
-                // Step 5: Product 재고 차감
+                // Step 4: Product 재고 차감
                 product.minusStock(productRequest.getQuantity() * itemRequest.getQuantity());
             }
         }
 
-        // Step 6: Order 생성 및 저장
+        // Step 5: Order 생성 및 저장
         Order order = OrderRequest.toEntity(orderRequest, calculateTotalPrice(orderRequest));
         orderRepository.save(order);
 
-        // Step 7: OrderItem 및 OrderProduct 생성 및 저장
+        // Step 6: OrderItem 및 OrderProduct 생성 및 저장
         for (ItemRequest itemRequest : orderRequest.getOrderItems()) {
             OrderItem orderItem = ItemRequest.toEntity(itemRequest, order);
             orderItemRepository.save(orderItem);
