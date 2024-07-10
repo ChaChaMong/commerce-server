@@ -3,6 +3,7 @@ package com.unknown.commerce.domain.product.dao;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.unknown.commerce.domain.product.entity.Product;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +27,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
                 .select(product)
                 .from(product)
                 .where(builder)
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst());
     }
 }

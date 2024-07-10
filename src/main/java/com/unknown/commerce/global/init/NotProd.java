@@ -10,11 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 
-@Profile("!test")
 @Configuration
 @RequiredArgsConstructor
 public class NotProd {
