@@ -92,6 +92,10 @@ class OrderControllerTest {
 
         latch.await();
 
+        // 제품의 재고가 0이어야 함
+        Product product = productRepository.findById(1L).orElseThrow();
+        assertEquals(0, product.getStock());
+
         // 10개의 요청은 정상적으로 처리되어야 함
         for (int i = 0; i < 10; i++) {
             ResultActions result = results.get(i);
@@ -102,9 +106,5 @@ class OrderControllerTest {
         ResultActions lastResult = results.get(10);
         lastResult.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(HttpResponse.Fail.OUT_OF_STOCK_PRODUCT.getMessage()));
-
-        // 제품의 재고가 0이어야 함
-        Product product = productRepository.findById(1L).orElseThrow();
-        assertEquals(0, product.getStock());
     }
 }
